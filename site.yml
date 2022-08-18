@@ -4,37 +4,46 @@
   become: true
   pre_tasks:
 
-  - name: install updates (CentOS)
+  - name: update repo cache (CentOS)
     tags: always
     dnf:
-      update_only: yes
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "CentOS"
 
-  - name: install updates (Ubuntu or Debian)
+  - name: update repo cache (Ubuntu or Debian)
     tags: always
     apt:
-      upgrade: dist
       update_cache: yes
+    changed_when: false
     when: ansible_distribution in ["Debian", "Ubuntu"]
 
-
-- hosts: workstations
+- hosts: all
   become: true
   tasks:
- 
-  - name: install unzip
-    package:
-      name: unzip
 
-  - name: install terraform
-    unarchive:
-      src: https://releases.hashicorp.com/terraform/1.2.7/terraform_1.2.7_linux_amd64.zip
-      dest: /usr/local/bin
-      remote_src: yes
-      mode: 0755
-      owner: root
-      group: root
+  - name: add ssh key for damaris
+    tags: always
+    authorized_key:
+      user: damaris
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDBwMUJeFRYTG7IOjiUloysoqY/Dv+pkEMUFR0TbXQfhL6YxY21Zo8je/qWsOEe6h9uzLt08cDreqkCw0hE/69DCXGtSVpn3DezQClwj9Zhyv5STx8H7mzBc8XAlnnhC/t3ine7tFrx7EuPWzUceI+IrD/QsAaXRQCu3bnbAggQfPWdjYAuPjkzc7ifJWkQc3n8GhZRCCn9FaeJadPHnqNNmmOoapcoOiG70/BuZY0orBguh6ETn5MF0fDek+hSWY68R081wnG01yFdbdEXhkjDYYxJWJC/JDEGkPte/6OE2jgDqCUCkpSrHvsrRcpxI247A070VhF3Fq0LPl/QUe8n5lF3QwhajmHxQD+fiiqFla2p6kcnS3qa5cc4efFgux7pzK6QnEc7VPGFziESWUQs4p1PmaM7poN2r4fW+YoNABC129wH29L4aVExI5IUX5pWRuhKaZ4miuJPcCW7DEiQkESVyrkKTPIqHbLjUEv8/yji4JzhCp3UQJg0O1DTwsk= damion@OMOTAYIO"
+
+#- hosts: workstations
+#  become: true
+#  tasks:
+# 
+#  - name: install unzip
+#    package:
+#      name: unzip
+
+#  - name: install terraform
+#    unarchive:
+#      src: https://releases.hashicorp.com/terraform/1.2.7/terraform_1.2.7_linux_amd64.zip
+#      dest: /usr/local/bin
+#      remote_src: yes
+#      mode: 0755
+#      owner: root
+#      group: root
 
 
 - hosts: web_servers

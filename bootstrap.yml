@@ -1,0 +1,45 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (CentOS)
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: install updates (Ubuntu or Debian)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution in ["Debian", "Ubuntu"]
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create user damaris
+    tags: always
+    user:
+      name: damaris
+      groups: root
+
+  - name: add ssh key for damaris
+    tags: always
+    authorized_key:
+      user: damaris
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDBwMUJeFRYTG7IOjiUloysoqY/Dv+pkEMUFR0TbXQfhL6YxY21Zo8je/qWsOEe6h9uzLt08cDreqkCw0hE/69DCXGtSVpn3DezQClwj9Zhyv5STx8H7mzBc8XAlnnhC/t3ine7tFrx7EuPWzUceI+IrD/QsAaXRQCu3bnbAggQfPWdjYAuPjkzc7ifJWkQc3n8GhZRCCn9FaeJadPHnqNNmmOoapcoOiG70/BuZY0orBguh6ETn5MF0fDek+hSWY68R081wnG01yFdbdEXhkjDYYxJWJC/JDEGkPte/6OE2jgDqCUCkpSrHvsrRcpxI247A070VhF3Fq0LPl/QUe8n5lF3QwhajmHxQD+fiiqFla2p6kcnS3qa5cc4efFgux7pzK6QnEc7VPGFziESWUQs4p1PmaM7poN2r4fW+YoNABC129wH29L4aVExI5IUX5pWRuhKaZ4miuJPcCW7DEiQkESVyrkKTPIqHbLjUEv8/yji4JzhCp3UQJg0O1DTwsk= damion@OMOTAYIO"
+     
+  - name: add sudoers file for damaris
+    tags: always
+    copy:
+      src: files/sudoer_damaris
+      dest: /etc/sudoers.d/damaris
+      owner: root
+      group: root
+
+
