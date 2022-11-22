@@ -1,3 +1,3 @@
 # ansible-getting-started
 
-This is my awesome Ansible repository!
+This is my ansible repository!
