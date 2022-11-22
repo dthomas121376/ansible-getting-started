@@ -9,3 +9,6 @@
 
 [workstations]
 172.27.137.163
+
+[local]
+localhost
